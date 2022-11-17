@@ -1,14 +1,11 @@
 package com.example.magasingestionstock.Services;
 
-import com.example.magasingestionstock.Entities.Produit;
-import com.example.magasingestionstock.Entities.Rayon;
-import com.example.magasingestionstock.Entities.Stock;
-import com.example.magasingestionstock.Repositories.ProduitRepository;
-import com.example.magasingestionstock.Repositories.RayonRepository;
-import com.example.magasingestionstock.Repositories.StockRepository;
+import com.example.magasingestionstock.Entities.*;
+import com.example.magasingestionstock.Repositories.*;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 @AllArgsConstructor
@@ -19,6 +16,8 @@ public class ProduitServiceIMP implements ProduitService {
 ProduitRepository produitRepository;
 RayonRepository rayonRepository;
 StockRepository stockRepository;
+DetailFactureRepository detailFactureRepository;
+FournisseurRepository fournisseurRepository;
     @Override
     public List<Produit> retrieveAllProduits() {
         return produitRepository.findAll();
@@ -50,5 +49,37 @@ StockRepository stockRepository;
             p.setStock(s);
             produitRepository.save(p);
         }
+    }
+
+
+    @Override
+    public void assignFournisseurToProduit(Long fournisseurId, Long produitId) {
+        Fournisseur f = fournisseurRepository.findById(fournisseurId).orElse(null);
+        Produit p = produitRepository.findById(fournisseurId).orElse(null);
+        List<Fournisseur> list =p.getFournisseurs();
+        if (f != null && p != null) {
+            list.add(f);
+            p.setFournisseurs(list);
+            produitRepository.save(p);
+        }
+    }
+
+    @Override
+    public float getRevenuBrutProduit(Long idProduit, Date startDate, Date endDate) {
+     List<Facture> list = detailFactureRepository.findAllByProduit_IdProduitAndFacture_DateFactureIsBetween(idProduit,startDate,endDate);
+     Produit p = produitRepository.findById(idProduit).orElse(null);
+     float brut=0;
+     if (list != null && p != null) {
+         for (Facture f:list
+              ) {
+             for (DetailFacture d : f.getDetailFactures()
+                  ) {
+                 brut = brut + (d.getQte()*p.getPrixUnitaire());
+             }
+         }
+      return brut;
+     }
+
+        return brut;
     }
 }

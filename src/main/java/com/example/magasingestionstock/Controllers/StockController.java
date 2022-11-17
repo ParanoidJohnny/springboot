@@ -1,8 +1,5 @@
 package com.example.magasingestionstock.Controllers;
-
 import com.example.magasingestionstock.Entities.Stock;
-import com.example.magasingestionstock.Entities.Stock;
-import com.example.magasingestionstock.Services.StockService;
 import com.example.magasingestionstock.Services.StockService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -41,6 +38,8 @@ return stockService.retrieveAllStock();
     public void removeStock(@PathVariable(value ="id") Long id) {
         stockService.deleteStock(id);
     }
+
+
 
 
 }

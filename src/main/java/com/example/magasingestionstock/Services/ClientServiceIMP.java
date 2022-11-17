@@ -1,10 +1,14 @@
 package com.example.magasingestionstock.Services;
 
+import com.example.magasingestionstock.Entities.CategorieClient;
 import com.example.magasingestionstock.Entities.Client;
+import com.example.magasingestionstock.Entities.Facture;
 import com.example.magasingestionstock.Repositories.ClientRepository;
+import com.example.magasingestionstock.Repositories.FactureRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 @AllArgsConstructor
@@ -13,6 +17,7 @@ import java.util.List;
 public class ClientServiceIMP implements ClientService {
 
 ClientRepository clientRepository;
+FactureRepository factureRepository;
 
     @Override
     public List<Client> retrieveAllClients() {
@@ -38,4 +43,27 @@ ClientRepository clientRepository;
     public Client retrieveClient(Long id) {
         return clientRepository.findById(id).orElse(null);
     }
+
+    @Override
+    public List<Facture> getFacturesByClient(Long idClient) {
+        Client c = clientRepository.findById(idClient).orElse(null);
+        if (c != null) {
+            return c.getFactures();
+        }
+        return null;
+    }
+
+    @Override
+    public float getChiffreAffaireParCategorieClient(CategorieClient categorieClient, Date startDate, Date endDate) {
+
+        float chiffre = 0;
+        List<Facture> list = factureRepository.findAllByDateFactureIsBetweenAndClientCategorieClient(startDate,endDate,categorieClient);
+        for (Facture f : list)
+        {
+          chiffre = f.getMontantFacture()+chiffre;
+        }
+        return chiffre;
+    }
+
+
 }

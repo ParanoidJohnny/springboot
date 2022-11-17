@@ -1,10 +1,13 @@
 package com.example.magasingestionstock.Controllers;
 
+import com.example.magasingestionstock.Entities.CategorieClient;
+import com.example.magasingestionstock.Entities.Fournisseur;
 import com.example.magasingestionstock.Entities.Produit;
 import com.example.magasingestionstock.Services.ProduitService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
 
 @RequestMapping("/produit")
@@ -29,11 +32,15 @@ return produitService.retrieveAllProduits();
 
     }
 
-    @PutMapping("/assign/{idProduit}/{idStock}")
-    public void assignProduitToStock(@PathVariable long idProduit,@PathVariable long idStock) {
-         produitService.assignProduitToStock(idProduit,idStock);
+    @PutMapping("/assign/{idf}/{idp}")
+    public void assignFournisseurToProduit(@PathVariable long idf,@PathVariable long idp) {
+        produitService.assignFournisseurToProduit(idf,idp);
     }
 
-
+    @GetMapping("/RevenuBrut")
+    public float getChiffreAffaireParCategorieClient(@RequestBody long idProduit, Date startDate, Date endDate)
+    {
+        return produitService.getRevenuBrutProduit(idProduit,startDate,endDate);
+    }
 
 }

@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.io.Console;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,6 +56,7 @@ StockRepository stockRepository;
                 listproduit.addAll(s.getProduits());
             }
         }
+        System.out.println(listproduit);
         return listproduit;
     }
 }
